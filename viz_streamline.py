@@ -2,8 +2,6 @@ import numpy as np
 import nibabel as nib
 import vtk
 
-import dipy.viz
-from fury.window import ShowManager
 import fury
 
 input_tck_filename = "data/sub-TiMeS_WP12_010_ses-G1_acq-1_dwi_mrtrix_iFOD2_500000.tck"
@@ -60,7 +58,7 @@ class UpdateStreamlineTimerCallback():
         if self.iterations < len(self.pts)-1:
             self.iterations += 1
 
-showManager = ShowManager()
+showManager = fury.window.ShowManager()
 
 # Renderer
 renderer = showManager.scene
