@@ -1,0 +1,34 @@
+# Version: 8
+# Coordinate system: NIfTI:Scanner
+# Created by: Brainsight 2.3.10
+# Units: millimetres, degrees, milliseconds, and microvolts
+# Encoding: UTF-8
+# Notes: Each column is delimited by a tab. Each value within a column is delimited by a semicolon.
+# Target Name	Loc. X	Loc. Y	Loc. Z	m0n0	m0n1	m0n2	m1n0	m1n1	m1n2	m2n0	m2n1	m2n2
+Trajectory M1L	-37.524	-11.972	57.554	0.734	-0.609	0.301	0.467	0.774	0.427	-0.493	-0.172	0.853
+# Sample Name	Session Name	Index	Assoc. Target	Loc. X	Loc. Y	Loc. Z	m0n0	m0n1	m0n2	m1n0	m1n1	m1n2	m2n0	m2n1	m2n2	Dist. to Target	Target Error	Angular Error	Twist Error	Stim. Power	Date	Time	Creation Cause	Crosshairs Driver	Offset	Comment	EMG Channels
+Sample 1	Session 1	1	Trajectory M1L	-39.498	-12.015	62.760	0.719	-0.573	0.395	0.430	0.812	0.395	-0.547	-0.115	0.829	5.568	1.348	4.702	3.474	(null)	2019-03-22	14:08:40.658	Button	70mm alpha	0.000	(null)	(null)
+# Planned Landmark Name	Loc. X	Loc. Y	Loc. Z
+LPA	-73.012	9.091	-45.258
+Nasion	4.320	106.525	-20.304
+RPA	76.027	11.484	-41.990
+# Session Landmark Name	Session Name	Loc. X	Loc. Y	Loc. Z
+LPA	Session 1	-69.320	10.796	-40.685
+Nasion	Session 1	1.502	97.204	-20.393
+RPA	Session 1	66.084	11.515	-37.941
+Refinement landmark 1	Session 1	-54.626	16.721	50.716
+Refinement landmark 2	Session 1	-58.674	-11.875	42.724
+Refinement landmark 3	Session 1	-61.401	-33.875	27.450
+Refinement landmark 4	Session 1	-49.992	-52.681	25.111
+Refinement landmark 5	Session 1	-25.541	-69.626	10.848
+Refinement landmark 6	Session 1	10.920	-73.542	5.025
+Refinement landmark 7	Session 1	63.934	-20.398	21.729
+Refinement landmark 8	Session 1	59.372	13.551	36.901
+Refinement landmark 9	Session 1	47.249	60.484	42.147
+Refinement landmark 10	Session 1	0.577	83.604	44.860
+Refinement landmark 11	Session 1	-36.474	83.975	28.090
+Refinement landmark 12	Session 1	-63.594	52.696	17.600
+Refinement landmark 13	Session 1	-55.746	39.331	43.449
+Refinement landmark 14	Session 1	-35.578	59.680	51.675
+# Session Name	Loc. X	Loc. Y	Loc. Z	m0n0	m0n1	m0n2	m1n0	m1n1	m1n2	m2n0	m2n1	m2n2
+Session 1	136.341	-28.136	85.353	0.642	0.623	0.447	-0.752	0.398	0.525	0.150	-0.673	0.724

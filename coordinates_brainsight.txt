@@ -1,0 +1,35 @@
+# Version: 8
+# Coordinate system: Brainsight
+# Created by: Brainsight 2.3.10
+# X=right->left, Y=anterior->posterior, Z=inferior->superior
+# Units: millimetres, degrees, milliseconds, and microvolts
+# Encoding: UTF-8
+# Notes: Each column is delimited by a tab. Each value within a column is delimited by a semicolon.
+# Target Name	Loc. X	Loc. Y	Loc. Z	m0n0	m0n1	m0n2	m1n0	m1n1	m1n2	m2n0	m2n1	m2n2
+Trajectory M1L	157.087	132.265	119.563	-0.745	0.537	0.396	-0.474	-0.844	0.252	0.470	0.000	0.883
+# Sample Name	Session Name	Index	Assoc. Target	Loc. X	Loc. Y	Loc. Z	m0n0	m0n1	m0n2	m1n0	m1n1	m1n2	m2n0	m2n1	m2n2	Dist. to Target	Target Error	Angular Error	Twist Error	Stim. Power	Date	Time	Creation Cause	Crosshairs Driver	Offset	Comment	EMG Channels
+Sample 1	Session 1	1	Trajectory M1L	158.925	131.275	124.726	-0.732	0.483	0.481	-0.436	-0.874	0.215	0.524	-0.052	0.850	5.568	1.348	4.702	3.474	(null)	2019-03-22	14:08:40.658	Button	70mm alpha	0.000	(null)	(null)
+# Planned Landmark Name	Loc. X	Loc. Y	Loc. Z
+LPA	195.351	131.988	15.597
+Nasion	117.909	31.541	18.696
+RPA	46.292	128.995	14.365
+# Session Landmark Name	Session Name	Loc. X	Loc. Y	Loc. Z
+LPA	Session 1	191.550	129.410	19.641
+Nasion	Session 1	120.679	40.695	20.530
+RPA	Session 1	56.126	128.162	18.590
+Refinement landmark 1	Session 1	174.512	105.495	107.636
+Refinement landmark 2	Session 1	178.617	135.107	105.576
+Refinement landmark 3	Session 1	181.625	159.698	95.039
+Refinement landmark 4	Session 1	170.182	178.594	96.169
+Refinement landmark 5	Session 1	146.021	198.029	84.900
+Refinement landmark 6	Session 1	109.704	203.021	79.001
+Refinement landmark 7	Session 1	56.554	147.620	83.435
+Refinement landmark 8	Session 1	60.898	111.339	91.699
+Refinement landmark 9	Session 1	73.127	64.297	87.866
+Refinement landmark 10	Session 1	119.833	41.097	87.185
+Refinement landmark 11	Session 1	157.310	44.057	71.664
+Refinement landmark 12	Session 1	184.529	76.793	68.301
+Refinement landmark 13	Session 1	175.940	84.773	96.067
+Refinement landmark 14	Session 1	155.672	63.198	99.561
+# Session Name	Loc. X	Loc. Y	Loc. Z	m0n0	m0n1	m0n2	m1n0	m1n1	m1n2	m2n0	m2n1	m2n2
+Session 1	136.341	-28.136	85.353	0.642	0.623	0.447	-0.752	0.398	0.525	0.150	-0.673	0.724
