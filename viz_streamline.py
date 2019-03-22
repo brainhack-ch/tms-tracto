@@ -25,7 +25,7 @@ endpoints = dipy.tracking.utils._to_voxel_coordinates(endpoints, lin_T, offset)
 # get labels for label_volume
 i, j, k = endpoints.T
 endlabels = scipy.ndimage.morphology.binary_dilation(handknob_right.get_data(),
-                                                     iterations=2)[i, j, k]
+                                                     iterations=4)[i, j, k]
 
 streamlines = tck.streamlines[np.logical_or(endlabels[0,:]==1, endlabels[1,:]==1)]
 endpoints = [sl[0::len(sl)-1] for sl in streamlines]
@@ -33,9 +33,7 @@ endpoints = dipy.tracking.utils._to_voxel_coordinates(endpoints, lin_T, offset)
 i, j, k = endpoints.T
 
 
-pts = np.loadtxt("points.txt")
-#pts = [[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63]]
-
+pts = np.loadtxt("data/points.txt")
 
 class UpdateStreamlineTimerCallback():
     def __init__(self, renderer, pts):
@@ -45,21 +43,13 @@ class UpdateStreamlineTimerCallback():
 
     def execute(self, iren, event):
         renderer.RemoveAllViewProps()
-        # Stimulation Location
-        #source = vtk.vtkSphereSource()
-        #source.SetCenter(pts[self.iterations])
-        #source.SetRadius(20.0)
-        #mapper = vtk.vtkPolyDataMapper()
-        #mapper.SetInputConnection(source.GetOutputPort())
-        #sphereActor = vtk.vtkActor()
-        #sphereActor.GetProperty().SetColor(1, 1, 1)
-        #sphereActor.GetProperty().SetOpacity(0.5)
-        #sphereActor.SetMapper(mapper)
-        #renderer.AddActor(sphereActor)
 
         # streamlines
+
+        #current_location = pts[self.iterations]  # change this to read in real time
+        current_location = np.loadtxt("data/update_pts.txt")
         mask = np.zeros(handknob_left.shape)
-        location = tuple(dipy.tracking._utils._to_voxel_coordinates([pts[self.iterations]], lin_T, offset)[0])
+        location = tuple(dipy.tracking._utils._to_voxel_coordinates([current_location], lin_T, offset)[0])
         mask[location]=1
         ##size of the mask
         mask = scipy.ndimage.morphology.binary_dilation(mask, iterations=15)
@@ -71,7 +61,7 @@ class UpdateStreamlineTimerCallback():
             stream_actor = actor.line(active_stream)
             renderer.add(stream_actor)
 
-        # targat location
+        # Stimulation Location
         roiActor = actor.contour_from_roi(mask,
                                           affine=handknob_right.affine,
                                           color=np.array([1, 1, 1]),
@@ -131,12 +121,15 @@ renderWindowInteractor.Initialize()#
 
 # Initialize a timer for the animation
 updateStreamlineTimerCallback = UpdateStreamlineTimerCallback(renderer, pts)
-renderWindowInteractor.AddObserver('TimerEvent',
-                                   updateStreamlineTimerCallback.execute)
+
+##COMMENT this line below to stop updating
+renderWindowInteractor.AddObserver('TimerEvent', updateStreamlineTimerCallback.execute)
 timerId = renderWindowInteractor.CreateRepeatingTimer(200) #ms
 UpdateStreamlineTimerCallback.timerId = timerId
 
 
 # Begin Interaction
 showManager.initialize()
+
+
 renderWindowInteractor.Start()
