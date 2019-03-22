@@ -1,20 +1,41 @@
 import numpy as np
 import nibabel as nib
 import vtk
+import dipy
+import dipy.tracking._utils
+from dipy.tracking import utils
+import scipy.ndimage.morphology
 
 from fury import window, actor
 
 input_tck_filename = "data/sub-TiMeS_WP12_010_ses-G1_acq-1_dwi_mrtrix_iFOD2_500000.tck"
 anat_filename = "data/sub-TiMeS_WP12_010_ses-G1_T1w_dwi.nii.gz"
 
-tck = nib.streamlines.load(input_tck_filename)
-streamlines = tck.streamlines[:5000]
-#anat = nib.load(anat_filename)
-
 handknob_left = nib.load("data/handknob_left.nii.gz")
 handknob_right = nib.load("data/handknob_right.nii.gz")
+anat = nib.load(anat_filename)
 
-pts = [[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63]]
+tck = nib.streamlines.load(input_tck_filename)
+streamlines = tck.streamlines
+endpoints = [sl[0::len(sl)-1] for sl in tck.streamlines]
+
+lin_T, offset = dipy.tracking.utils._mapping_to_voxel(anat.affine, None)
+endpoints = dipy.tracking.utils._to_voxel_coordinates(endpoints, lin_T, offset)
+
+# get labels for label_volume
+i, j, k = endpoints.T
+endlabels = scipy.ndimage.morphology.binary_dilation(handknob_right.get_data(),
+                                                     iterations=2)[i, j, k]
+
+streamlines = tck.streamlines[np.logical_or(endlabels[0,:]==1, endlabels[1,:]==1)]
+endpoints = [sl[0::len(sl)-1] for sl in streamlines]
+endpoints = dipy.tracking.utils._to_voxel_coordinates(endpoints, lin_T, offset)
+i, j, k = endpoints.T
+
+
+pts = np.loadtxt("points.txt")
+#pts = [[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63],[-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63], [-40, -12, 63],[-40, -12, 63],[-30, -12, 63],[-35, -12, 63]]
+
 
 class UpdateStreamlineTimerCallback():
     def __init__(self, renderer, pts):
@@ -25,20 +46,37 @@ class UpdateStreamlineTimerCallback():
     def execute(self, iren, event):
         renderer.RemoveAllViewProps()
         # Stimulation Location
-        source = vtk.vtkSphereSource()
-        source.SetCenter(pts[self.iterations])
-        source.SetRadius(20.0)
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(source.GetOutputPort())
-        sphereActor = vtk.vtkActor()
-        sphereActor.GetProperty().SetColor(1, 1, 1)
-        sphereActor.GetProperty().SetOpacity(0.5)
-        sphereActor.SetMapper(mapper)
-        renderer.AddActor(sphereActor)
+        #source = vtk.vtkSphereSource()
+        #source.SetCenter(pts[self.iterations])
+        #source.SetRadius(20.0)
+        #mapper = vtk.vtkPolyDataMapper()
+        #mapper.SetInputConnection(source.GetOutputPort())
+        #sphereActor = vtk.vtkActor()
+        #sphereActor.GetProperty().SetColor(1, 1, 1)
+        #sphereActor.GetProperty().SetOpacity(0.5)
+        #sphereActor.SetMapper(mapper)
+        #renderer.AddActor(sphereActor)
 
         # streamlines
-        stream_actor = actor.line(streamlines[1000:5000])
-        renderer.add(stream_actor)
+        mask = np.zeros(handknob_left.shape)
+        location = tuple(dipy.tracking._utils._to_voxel_coordinates([pts[self.iterations]], lin_T, offset)[0])
+        mask[location]=1
+        ##size of the mask
+        mask = scipy.ndimage.morphology.binary_dilation(mask, iterations=15)
+        endlabels = mask[i, j, k]
+
+        idx = np.logical_or(endlabels[0,:]==1, endlabels[1,:]==1)
+        if np.sum(idx)>0:
+            active_stream = streamlines[idx]
+            stream_actor = actor.line(active_stream)
+            renderer.add(stream_actor)
+
+        # targat location
+        roiActor = actor.contour_from_roi(mask,
+                                          affine=handknob_right.affine,
+                                          color=np.array([1, 1, 1]),
+                                          opacity=0.5)
+        renderer.AddActor(roiActor)
 
         # ROI
         roiActor = actor.contour_from_roi(handknob_left.get_data(),
@@ -65,20 +103,9 @@ renderer = showManager.scene
 
 
 ## inital view
-# Stimulation Location
-source = vtk.vtkSphereSource()
-source.SetCenter(pts[0])
-source.SetRadius(20.0)
-mapper = vtk.vtkPolyDataMapper()
-mapper.SetInputConnection(source.GetOutputPort())
-sphereActor = vtk.vtkActor()
-sphereActor.GetProperty().SetColor(1, 1, 1)
-sphereActor.GetProperty().SetOpacity(0.5)
-sphereActor.SetMapper(mapper)
-renderer.AddActor(sphereActor)
 
 # streamlines
-stream_actor = actor.line(streamlines[1000:5000])
+stream_actor = actor.line(streamlines)
 renderer.add(stream_actor)
 
 # ROI
@@ -106,7 +133,7 @@ renderWindowInteractor.Initialize()#
 updateStreamlineTimerCallback = UpdateStreamlineTimerCallback(renderer, pts)
 renderWindowInteractor.AddObserver('TimerEvent',
                                    updateStreamlineTimerCallback.execute)
-timerId = renderWindowInteractor.CreateRepeatingTimer(300) #ms
+timerId = renderWindowInteractor.CreateRepeatingTimer(200) #ms
 UpdateStreamlineTimerCallback.timerId = timerId
 
 
