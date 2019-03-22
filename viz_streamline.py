@@ -2,7 +2,7 @@ import numpy as np
 import nibabel as nib
 import vtk
 
-import fury
+from fury import window, actor
 
 input_tck_filename = "data/sub-TiMeS_WP12_010_ses-G1_acq-1_dwi_mrtrix_iFOD2_500000.tck"
 anat_filename = "data/sub-TiMeS_WP12_010_ses-G1_T1w_dwi.nii.gz"
@@ -30,27 +30,27 @@ class UpdateStreamlineTimerCallback():
         source.SetRadius(20.0)
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputConnection(source.GetOutputPort())
-        actor = vtk.vtkActor()
-        actor.GetProperty().SetColor(1, 1, 1)
-        actor.GetProperty().SetOpacity(0.5)
-        actor.SetMapper(mapper)
-        renderer.AddActor(actor)
-        # streamlines
+        sphereActor = vtk.vtkActor()
+        sphereActor.GetProperty().SetColor(1, 1, 1)
+        sphereActor.GetProperty().SetOpacity(0.5)
+        sphereActor.SetMapper(mapper)
+        renderer.AddActor(sphereActor)
 
-        stream_actor = fury.actor.line(streamlines[1000:5000])
+        # streamlines
+        stream_actor = actor.line(streamlines[1000:5000])
         renderer.add(stream_actor)
 
         # ROI
-        actor = fury.actor.contour_from_roi(handknob_left.get_data(),
-                                            affine=handknob_left.affine,
-                                            color=np.array([1, 0, 0]),
-                                            opacity=0.5)
-        renderer.AddActor(actor)
-        actor = fury.actor.contour_from_roi(handknob_right.get_data(),
-                                            affine=handknob_right.affine,
-                                            color=np.array([0, 0, 1]),
-                                            opacity=0.5)
-        renderer.AddActor(actor)
+        roiActor = actor.contour_from_roi(handknob_left.get_data(),
+                                          affine=handknob_left.affine,
+                                          color=np.array([1, 0, 0]),
+                                          opacity=0.5)
+        renderer.AddActor(roiActor)
+        roiActor = actor.contour_from_roi(handknob_right.get_data(),
+                                          affine=handknob_right.affine,
+                                          color=np.array([0, 0, 1]),
+                                          opacity=0.5)
+        renderer.AddActor(roiActor)
 
         #stream_actor = actor.line([streamlines[self.iterations]])
         #self.renderer.add(stream_actor)
@@ -58,39 +58,40 @@ class UpdateStreamlineTimerCallback():
         if self.iterations < len(self.pts)-1:
             self.iterations += 1
 
-showManager = fury.window.ShowManager()
+showManager = window.ShowManager()
 
 # Renderer
 renderer = showManager.scene
 
 
 ## inital view
+# Stimulation Location
 source = vtk.vtkSphereSource()
 source.SetCenter(pts[0])
 source.SetRadius(20.0)
 mapper = vtk.vtkPolyDataMapper()
 mapper.SetInputConnection(source.GetOutputPort())
-actor = vtk.vtkActor()
-actor.GetProperty().SetColor(1, 1, 1)
-actor.GetProperty().SetOpacity(0.5)
-actor.SetMapper(mapper)
-renderer.AddActor(actor)
-# streamlines
+sphereActor = vtk.vtkActor()
+sphereActor.GetProperty().SetColor(1, 1, 1)
+sphereActor.GetProperty().SetOpacity(0.5)
+sphereActor.SetMapper(mapper)
+renderer.AddActor(sphereActor)
 
-stream_actor = fury.actor.line(streamlines[1000:5000])
+# streamlines
+stream_actor = actor.line(streamlines[1000:5000])
 renderer.add(stream_actor)
 
 # ROI
-actor = fury.actor.contour_from_roi(handknob_left.get_data(),
-                                    affine=handknob_left.affine,
-                                    color=np.array([1, 0, 0]),
-                                    opacity=0.5)
-renderer.AddActor(actor)
-actor = fury.actor.contour_from_roi(handknob_right.get_data(),
-                                    affine=handknob_right.affine,
-                                    color=np.array([0, 0, 1]),
-                                    opacity=0.5)
-renderer.AddActor(actor)
+roiActor = actor.contour_from_roi(handknob_left.get_data(),
+                                  affine=handknob_left.affine,
+                                  color=np.array([1, 0, 0]),
+                                  opacity=0.5)
+renderer.AddActor(roiActor)
+roiActor = actor.contour_from_roi(handknob_right.get_data(),
+                                  affine=handknob_right.affine,
+                                  color=np.array([0, 0, 1]),
+                                  opacity=0.5)
+renderer.AddActor(roiActor)
 
 # Render Window
 renderWindow = showManager.window
