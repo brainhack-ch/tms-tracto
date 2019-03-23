@@ -45,23 +45,22 @@ while (1==1):
 
 	#Create a vector with the last value of the file
 	q=a2[len(a2)-1: , : ]
-	q=q[0]
-	q = [float(i) for i in q] 
-	print(q)
+	if (q[0,1] == "(null)"):
+		print("Umbrella outsite of field of view")
+	else:
+		q=q[0]
+		q = [float(i) for i in q]
+		print(q)
 
-	#Convert the coordinates of the dot
-	R = np.array([R1,R2,R3]) # rotation matrix
-	T = np.array(Translation) # extra translation
+		#Convert the coordinates of the dot
+		R = np.array([R1,R2,R3]) # rotation matrix
+		T = np.array(Translation) # extra translation
 
-	print(np.dot(R,q)+T)
-	trans_q=np.dot(R,q)+T
+		print(np.dot(R,q)+T)
+		trans_q=np.dot(R,q)+T
 
 
 
-	np.savetxt('update_pts.txt',trans_q)
+		np.savetxt('/home/brainhacker/tms-tracto/data/update_pts.txt',trans_q)
 
 	#system sleep?
-
-
-
-

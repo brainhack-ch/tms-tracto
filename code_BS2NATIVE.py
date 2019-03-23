@@ -4,17 +4,18 @@ with open("coordinates_brainsight.txt","r") as fi:
                         for ln in fi:
                                                 if ln.startswith("LPA\tSession"):
                                                                         LPA = ln[14:-1]
+                                                                        print(type(LPA))
                                                                         LPA=LPA.split('\t')
                                                                         LPA_bs = [float(i) for i in LPA]
                                                 if ln.startswith("RPA\tSession"):
                                                                         RPA = ln[14:-1]
                                                                         RPA=RPA.split('\t')
-                                                                        RPA_bs = [float(i) for i in RPA]                                                                        
+                                                                        RPA_bs = [float(i) for i in RPA]
                                                 if ln.startswith("Nasion\tSession"):
-                                                                        Nasion = ln[17:-1]    
+                                                                        Nasion = ln[17:-1]
                                                                         Nasion=Nasion.split('\t')
-                                                                        Nasion_bs = [float(i) for i in Nasion]                                                                        
-                                                                        
+                                                                        Nasion_bs = [float(i) for i in Nasion]
+
 print(LPA_bs)
 print(RPA_bs)
 print(Nasion_bs)
@@ -28,12 +29,12 @@ with open("coordinates_native.txt","r") as fi:
                                                 if ln.startswith("RPA\tSession"):
                                                                         RPA = ln[14:-1]
                                                                         RPA=RPA.split('\t')
-                                                                        RPA_native = [float(i) for i in RPA]                                                                        
+                                                                        RPA_native = [float(i) for i in RPA]
                                                 if ln.startswith("Nasion\tSession"):
-                                                                        Nasion = ln[17:-1]    
+                                                                        Nasion = ln[17:-1]
                                                                         Nasion=Nasion.split('\t')
-                                                                        Nasion_native = [float(i) for i in Nasion]                                                                        
-                                                                        
+                                                                        Nasion_native = [float(i) for i in Nasion]
+
 print(LPA_native)
 print(RPA_native)
 print(Nasion_native)
@@ -59,8 +60,7 @@ Translation = [float(i) for i in aline2.split('\t')]
 R = np.array([R1,R2,R3]) # rotation matrix
 T = np.array(Translation) # extra translation
 
+print(type(LPA_bs))
 print(np.dot(R,LPA_bs)+T) # convert LPA into native space and display
 print(np.dot(R,RPA_bs)+T) # convert RPA into native space and display
 print(np.dot(R,Nasion_bs)+T) # convert Nasion into native space and display
-
-
