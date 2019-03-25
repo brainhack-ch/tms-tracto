@@ -124,7 +124,7 @@ updateStreamlineTimerCallback = UpdateStreamlineTimerCallback(renderer, pts)
 
 ##COMMENT this line below to stop updating
 renderWindowInteractor.AddObserver('TimerEvent', updateStreamlineTimerCallback.execute)
-timerId = renderWindowInteractor.CreateRepeatingTimer(200) #ms
+timerId = renderWindowInteractor.CreateRepeatingTimer(150) #ms
 UpdateStreamlineTimerCallback.timerId = timerId
 
 
